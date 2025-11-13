@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-TODO - Gestion de tâches</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <div id="login-page" class="page active">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <i class="fas fa-check-circle"></i>
+                    <h1>E-TODO</h1>
+                    <p>Gérez vos tâches efficacement</p>
+                </div>
+                
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">
+                            <i class="fas fa-envelope"></i> Email
+                        </label>
+                        <input 
+                            type="email" 
+                            id="login-email" 
+                            placeholder="votre@email.com" 
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">
+                            <i class="fas fa-lock"></i> Mot de passe
+                        </label>
+                        <input 
+                            type="password" 
+                            id="login-password" 
+                            placeholder="••••••••" 
+                            required
+                            autocomplete="current-password"
+                        >
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Se connecter
+                    </button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Pas encore de compte ? <a href="#" id="show-register">S'inscrire</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="register-page" class="page">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <i class="fas fa-user-plus"></i>
+                    <h1>Inscription</h1>
+                    <p>Créez votre compte gratuit</p>
+                </div>
+                
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="register-email">
+                            <i class="fas fa-envelope"></i> Email
+                        </label>
+                        <input 
+                            type="email" 
+                            id="register-email" 
+                            placeholder="votre@email.com" 
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="register-firstname">
+                                <i class="fas fa-user"></i> Prénom
+                            </label>
+                            <input 
+                                type="text" 
+                                id="register-firstname" 
+                                placeholder="Jean" 
+                                required
+                                autocomplete="given-name"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="register-name">
+                                <i class="fas fa-user"></i> Nom
+                            </label>
+                            <input 
+                                type="text" 
+                                id="register-name" 
+                                placeholder="Dupont" 
+                                required
+                                autocomplete="family-name"
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-password">
+                            <i class="fas fa-lock"></i> Mot de passe
+                        </label>
+                        <input 
+                            type="password" 
+                            id="register-password" 
+                            placeholder="••••••••" 
+                            required
+                            autocomplete="new-password"
+                            minlength="6"
+                        >
+                        <small>Minimum 6 caractères</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> S'inscrire
+                    </button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Déjà un compte ? <a href="#" id="show-login">Se connecter</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard-page" class="page">
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <i class="fas fa-check-circle"></i>
+                    <h1>E-TODO</h1>
+                </div>
+                
+                <div class="nav-user">
+                    <span id="user-name-nav"></span>
+                    <button id="logout-btn" class="btn btn-outline">
+                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="container">
+                <div class="user-card">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="user-details">
+                            <h2 id="user-fullname">Chargement...</h2>
+                            <p id="user-email">email@example.com</p>
+                            <small id="user-since">Membre depuis...</small>
+                        </div>
+                    </div>
+                    <div class="user-stats">
+                        <div class="stat">
+                            <i class="fas fa-tasks"></i>
+                            <div>
+                                <strong id="stat-total">0</strong>
+                                <span>Total</span>
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <strong id="stat-pending">0</strong>
+                                <span>En cours</span>
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-check"></i>
+                            <div>
+                                <strong id="stat-done">0</strong>
+                                <span>Terminées</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="add-todo-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-plus-circle"></i> Nouvelle tâche</h2>
+                        <button id="toggle-form-btn" class="btn btn-secondary">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    
+                    <form id="todo-form" class="todo-form">
+                        <div class="form-row">
+                            <div class="form-group flex-2">
+                                <label for="todo-title">
+                                    <i class="fas fa-heading"></i> Titre
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="todo-title" 
+                                    placeholder="Ex: Finir le projet E-TODO" 
+                                    required
+                                >
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="todo-status">
+                                    <i class="fas fa-flag"></i> Statut
+                                </label>
+                                <select id="todo-status">
+                                    <option value="not started">Pas commencé</option>
+                                    <option value="todo">À faire</option>
+                                    <option value="in progress">En cours</option>
+                                    <option value="done">Terminé</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="todo-description">
+                                <i class="fas fa-align-left"></i> Description
+                            </label>
+                            <textarea 
+                                id="todo-description" 
+                                placeholder="Décrivez votre tâche en détail..." 
+                                required
+                                rows="3"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="todo-due-time">
+                                    <i class="fas fa-calendar-alt"></i> Date d'échéance
+                                </label>
+                                <input 
+                                    type="datetime-local" 
+                                    id="todo-due-time" 
+                                    required
+                                >
+                            </div>
+                            
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Ajouter la tâche
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="filters-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-filter"></i> Mes tâches</h2>
+                        <div class="filters">
+                            <button class="filter-btn active" data-filter="all">
+                                <i class="fas fa-list"></i> Toutes
+                            </button>
+                            <button class="filter-btn" data-filter="not started">
+                                <i class="fas fa-circle"></i> Pas commencées
+                            </button>
+                            <button class="filter-btn" data-filter="todo">
+                                <i class="fas fa-list-ul"></i> À faire
+                            </button>
+                            <button class="filter-btn" data-filter="in progress">
+                                <i class="fas fa-spinner"></i> En cours
+                            </button>
+                            <button class="filter-btn" data-filter="done">
+                                <i class="fas fa-check-circle"></i> Terminées
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input 
+                            type="text" 
+                            id="search-input" 
+                            placeholder="Rechercher une tâche..."
+                        >
+                    </div>
+                </div>
+
+                <div id="todos-list" class="todos-list">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>Aucune tâche</h3>
+                        <p>Commencez par ajouter votre première tâche !</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 E-TODO - Epitech Project</p>
+        </footer>
+    </div>
+
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Modifier la tâche</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            
+            <form id="edit-form">
+                <input type="hidden" id="edit-todo-id">
+                
+                <div class="form-group">
+                    <label for="edit-title">Titre</label>
+                    <input type="text" id="edit-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-description">Description</label>
+                    <textarea id="edit-description" required rows="3"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-due-time">Date d'échéance</label>
+                        <input type="datetime-local" id="edit-due-time" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-status">Statut</label>
+                        <select id="edit-status">
+                            <option value="not started">Pas commencé</option>
+                            <option value="todo">À faire</option>
+                            <option value="in progress">En cours</option>
+                            <option value="done">Terminé</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline modal-close">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
