@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: etodo-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./e-todo.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - etodo-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: etodo-backend
+    restart: always
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PORT: ${PORT}
+      SECRET: ${SECRET}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - etodo-network
+
+  frontend:
+    build: ./frontend
+    container_name: etodo-frontend
+    restart: always
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - etodo-network
+
+volumes:
+  mysql_data:
+
+networks:
+  etodo-network:
+    driver: bridge
