@@ -4,7 +4,7 @@ let allTodos = [];
 let currentFilter = 'all';
 let currentUserId = null;
 
-// ========== AUTH ==========
+// AUTH 
 
 function showLogin() {
     document.getElementById('login-form').classList.remove('hidden');
